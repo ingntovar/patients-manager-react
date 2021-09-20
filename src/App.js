@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { React, useState, useEffect } from "react"
+import Form from "./components/Form"
+import Rendez from "./components/Rendez"
 
-function App() {
+const App = () => {
+  const [name, setName] = useState()
+  const [owner, setOwner] = useState()
+  const [date, setDate] = useState()
+  const [time, setTime] = useState()
+  const [symptoms, setSymptoms] = useState()
+
+  let fromLocalS = JSON.parse(localStorage.getItem("appo"))
+  if (!fromLocalS) {
+    fromLocalS = []
+  }
+
+  const [submits, setSubmits] = useState(fromLocalS)
+
+  useEffect(() => {
+    let fromLocalS = JSON.parse(localStorage.getItem("appo"))
+
+    console.log("esta gran puta mierda no sirve")
+
+    if (fromLocalS) {
+      localStorage.setItem("appo", JSON.stringify(submits))
+    } else {
+      localStorage.setItem("appo", JSON.stringify([]))
+    }
+  }, [submits])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <h1>Patients App</h1>
+
+      <div className="container">
+        <div className="row">
+          <div className="one-half column">
+            <h1>Crear cita</h1>
+            <Form setName={setName} setOwner={setOwner} setDate={setDate} setTime={setTime} setSymptoms={setSymptoms} setSubmits={setSubmits} name={name} owner={owner} date={date} time={time} symptoms={symptoms} />
+          </div>
+          <div className="one-half column">
+            <h1>Admin yor Appoinments</h1>
+            {submits.map((submit) => (
+              <Rendez key={submit.id} submit={submit} setSubmits={setSubmits} submits={submits} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
